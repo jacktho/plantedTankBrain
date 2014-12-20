@@ -37,7 +37,7 @@ namespace plantedTankBrain
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             //Set the time current time... this needs to be re-done whenever power is lost unless a clock module is added
-            DateTime time = new DateTime(2014, 12, 12, 17, 39, 00);
+            DateTime time = new DateTime(2014, 12, 12, 13, 03, 00);
             Utility.SetLocalTime(time);
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.

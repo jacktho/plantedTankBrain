@@ -33,69 +33,54 @@ namespace plantedTankBrain
         public float transition;
         public float overhead;
         public float night;
+        public int frequency;
         Extender extender;
 
         public Lighting(Extender extender, GT.Socket.Pin pin, int frequency, float transition, float overhead, float night)
         {
             this.extender = extender;
+            this.frequency = frequency;
             this.transition = transition;
             this.overhead = overhead;
             this.night = night;
 
+            //asign the pin for pwm
             PwmOutput pwm = extender.CreatePwmOutput(pin);
+            
+            //thread that loops changing the light output per time of day
             Thread thread = new Thread(() => PwmThread(pwm));
             thread.Start();
         }
 
-        public Lighting(Extender extender, GT.Socket.Pin pin, int frequency)
+        public Lighting(Extender extender, GT.Socket.Pin pin, int frequency, int dutyCycle)//have not tested this
         {
             this.extender = extender;
-
             PwmOutput pwm = extender.CreatePwmOutput(pin);
-
+            pwm.Set(frequency, dutyCycle);
         }
-
-        //doing this because enum.Parse doesnt work in .netmf :(
-        private GT.Socket.Pin GetPin(byte pin)
-        {
-            switch (pin)
-            {
-                case 7:
-                    {
-                        return GT.Socket.Pin.Seven;
-                    }
-                case 8:
-                    {
-                        return GT.Socket.Pin.Eight;
-                    }
-                case 9:
-                    {
-                        return GT.Socket.Pin.Nine;
-                    }
-                default:
-                    {
-                        Debug.Print("No or wrong pin provided for Lighting");
-                        return GT.Socket.Pin.None;
-                    }
-            }
-        }
-
 
         private void PwmThread(PwmOutput pwm)
         {
             do
             {
                 float dutyCycle = GetDutyCycle(Time.start, Time.photoperiod, Time.overhead, Time.transition, this.transition, this.overhead, this.night);
-                
-                pwm.Set(1000, dutyCycle);
+
+                try
+                {
+                    pwm.Set(this.frequency, dutyCycle);
+                }
+                catch
+                {
+                    Debug.Print("Unable to set pwm");
+                }
 
                 Thread.Sleep(1000);
-                string thread = Thread.CurrentThread.ManagedThreadId.ToString();
-                Debug.Print("dutyCycle of " + thread + " is " + dutyCycle + " at " + DateTime.Now.TimeOfDay.ToString());
+                //string thread = Thread.CurrentThread.ManagedThreadId.ToString();
+                //Debug.Print("dutyCycle of " + thread + " is " + dutyCycle + " at " + DateTime.Now.TimeOfDay.ToString());
             } while (true);
         }
 
-        // figures out what the current dutycycle should be for the pwm setting based on how far between phases the time is
+        // figures out what the current dutycycle should be for the pwm setting based on how far between phases the time is... hurts my head... easier way to do this?
         private float GetDutyCycle(TimeSpan start, TimeSpan totalLength, TimeSpan overheadLength, TimeSpan transitionLength, float transition, float overhead, float night)
         {
             float diff;
@@ -112,7 +97,7 @@ namespace plantedTankBrain
             TimeSpan overheadEnd = TimeSpan.FromTicks(sunSetStart.Ticks - morningAfternoonLength.Ticks);
             
 
-            if (now > start && now < sunRiseEnd)  
+            if (now > start && now < sunRiseEnd)//sunrise  
             {
                 diff = transition - night;
                 duration = transitionLength.Ticks;
@@ -121,7 +106,7 @@ namespace plantedTankBrain
                 dutyCycle = night + (float)currentTick / (float)duration * diff;
                 return dutyCycle;
             }
-            else if (now > sunRiseEnd && now < overheadStart)
+            else if (now > sunRiseEnd && now < overheadStart)//transition to overhead sun
             {  
                 diff = overhead - transition;
                 duration = overheadStart.Ticks - sunRiseEnd.Ticks;
@@ -130,11 +115,11 @@ namespace plantedTankBrain
                 dutyCycle = transition + (float)currentTick / (float)duration * diff;
                 return dutyCycle;
             }
-            else if (now > overheadStart && now < overheadEnd)
+            else if (now > overheadStart && now < overheadEnd)//overheard sun/max light .. just gonna sent the parameter back
             {
-                return overhead;
+                return overhead; 
             }
-            else if (now > overheadEnd && now < sunSetStart)
+            else if (now > overheadEnd && now < sunSetStart)// transition to sunset start
             {
                 diff = overhead - transition;
                 duration = sunSetStart.Ticks - overheadEnd.Ticks;
@@ -143,7 +128,7 @@ namespace plantedTankBrain
                 dutyCycle = overhead - (float)currentTick / (float)duration * diff;
                 return dutyCycle;
             }
-            else if (now > sunSetStart && now < sunSetEnd)
+            else if (now > sunSetStart && now < sunSetEnd)// sunset
             {
                 diff = transition - night;
                 duration = transitionLength.Ticks;
@@ -152,7 +137,7 @@ namespace plantedTankBrain
                 dutyCycle = transition - (float)currentTick / (float)duration * diff;
                 return dutyCycle;
             }
-            else
+            else // night time.. just gonna sent the parameter back
             {
                 return night;
             }
