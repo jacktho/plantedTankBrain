@@ -43,11 +43,10 @@ namespace plantedTankBrain
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
 
-
             Lighting royalblue = new Lighting(extender, GT.Socket.Pin.Seven, 1000, .02f, 1f, .002f);
-            Lighting red = new Lighting(extender, 8, 1000, .1f, 1f, .002f);
-            Lighting white = new Lighting(extender2, 8, 1000, .05f, 1f, .004f);
-            //Lighting blue = new Lighting(extender2, 7, 1000, .1f, 1f, .004f);
+            Lighting red = new Lighting(extender, GT.Socket.Pin.Eight, 1000, .1f, 1f, .002f);
+            Lighting white = new Lighting(extender2, GT.Socket.Pin.Eight, 1000, .05f, 1f, .004f);
+            //Lighting blue = new Lighting(extender2, GT.Socket.Pin.Seven, 1000, .1f, 1f, .004f);
 
             TimeSpan co2Start = new TimeSpan(0, 00, 0);
             TimeSpan co2End = new TimeSpan(2, 00, 0);

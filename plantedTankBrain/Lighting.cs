@@ -35,75 +35,51 @@ namespace plantedTankBrain
         public float night;
         Extender extender;
 
-        public Lighting(Extender extender, byte pin, int frequency, float transition, float overhead, float night)
+        public Lighting(Extender extender, GT.Socket.Pin pin, int frequency, float transition, float overhead, float night)
         {
             this.extender = extender;
             this.transition = transition;
             this.overhead = overhead;
             this.night = night;
 
-            SetPwm(pin, frequency);
+            PwmOutput pwm = extender.CreatePwmOutput(pin);
+            Thread thread = new Thread(() => PwmThread(pwm));
+            thread.Start();
         }
 
-        public Lighting(Extender extender, object pin, int frequency, float duty)
+        public Lighting(Extender extender, GT.Socket.Pin pin, int frequency)
         {
             this.extender = extender;
 
-            switch (pin)
-            {
-                case 7:
-                    {
-                        PwmOutput pwm = extender.CreatePwmOutput(GT.Socket.Pin.Seven);
-                        pwm.Set(frequency, duty);
-                        break;
-                    }
-                case 8:
-                    {
-                        PwmOutput pwm = extender.CreatePwmOutput(GT.Socket.Pin.Eight);
-                        pwm.Set(frequency, duty);
-                        break;
-                    }
-                case 9:
-                    {
-                        PwmOutput pwm = extender.CreatePwmOutput(GT.Socket.Pin.Nine);
-                        pwm.Set(frequency, duty);
-                        break;
-                    }
-            }
+            PwmOutput pwm = extender.CreatePwmOutput(pin);
+
         }
 
-        private void SetPwm(byte pin, int frequency)
+        //doing this because enum.Parse doesnt work in .netmf :(
+        private GT.Socket.Pin GetPin(byte pin)
         {
             switch (pin)
             {
                 case 7:
                     {
-                        PwmOutput pwm = extender.CreatePwmOutput(GT.Socket.Pin.Seven);
-                        Thread threadFour = new Thread(() => PwmThread(pwm));
-                        threadFour.Start();   
-                        break;
+                        return GT.Socket.Pin.Seven;
                     }
                 case 8:
                     {
-                        PwmOutput pwm = extender.CreatePwmOutput(GT.Socket.Pin.Eight);
-                        Thread threadFive = new Thread(() => PwmThread(pwm));
-                        threadFive.Start();
-                        break;
+                        return GT.Socket.Pin.Eight;
                     }
                 case 9:
                     {
-                        PwmOutput pwm = extender.CreatePwmOutput(GT.Socket.Pin.Nine);
-                        Thread threadSix = new Thread(() => PwmThread(pwm));
-                        threadSix.Start();
-                        break;
+                        return GT.Socket.Pin.Nine;
                     }
                 default:
                     {
                         Debug.Print("No or wrong pin provided for Lighting");
-                        break;
+                        return GT.Socket.Pin.None;
                     }
             }
         }
+
 
         private void PwmThread(PwmOutput pwm)
         {
