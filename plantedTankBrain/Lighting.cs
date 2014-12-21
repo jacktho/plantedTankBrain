@@ -20,50 +20,52 @@ namespace plantedTankBrain
 {
     class Lighting
     {
-        
-        //start of cycle time for all of the lights... consider the values declared in the strut as defaults
+
+        //photoperiod times
         public struct Time
         {
-            public static TimeSpan start = new TimeSpan(8, 15, 0);
-            public static TimeSpan transition = new TimeSpan(2, 45, 0);
-            public static TimeSpan photoperiod = new TimeSpan(13, 00, 0);
-            public static TimeSpan overhead = new TimeSpan(7, 00, 0);
+            public static TimeSpan sunrise = new TimeSpan(8, 15, 0);
+            public static TimeSpan morning = new TimeSpan(8, 30, 0);
+            public static TimeSpan fadeToOverhead = new TimeSpan(11, 00, 0);
+            public static TimeSpan overhead = new TimeSpan(11, 30, 0);
+            public static TimeSpan fadeToLowLight = new TimeSpan(17, 00, 00);
+            public static TimeSpan evening = new TimeSpan(17, 30, 0);
+            public static TimeSpan sunset = new TimeSpan(19, 30, 0);
+            public static TimeSpan night = new TimeSpan(19, 45, 0);
         }
 
-        public float transition;
-        public float overhead;
-        public float night;
+        //duty cycle settings for each time period... values set are just defaults
+        public struct DutyCycle
+        {
+            public static float overhead = 1f;
+            public static float lowLight = .05f;
+            public static float night = .02f;
+        }
+
         public int frequency;
         Extender extender;
 
-        public Lighting(Extender extender, GT.Socket.Pin pin, int frequency, float transition, float overhead, float night)
+        public Lighting(Extender extender, GT.Socket.Pin pin, int frequency, float lowLightDutyCycle, float overheadDutyCycle, float nightDutyCycle)
         {
             this.extender = extender;
             this.frequency = frequency;
-            this.transition = transition;
-            this.overhead = overhead;
-            this.night = night;
+            DutyCycle.lowLight = lowLightDutyCycle;
+            DutyCycle.overhead = overheadDutyCycle;
+            DutyCycle.night = nightDutyCycle;
 
             //asign the pin for pwm
             PwmOutput pwm = extender.CreatePwmOutput(pin);
-            
+
             //thread that loops changing the light output per time of day
             Thread thread = new Thread(() => PwmThread(pwm));
             thread.Start();
-        }
-
-        public Lighting(Extender extender, GT.Socket.Pin pin, int frequency, int dutyCycle)//have not tested this
-        {
-            this.extender = extender;
-            PwmOutput pwm = extender.CreatePwmOutput(pin);
-            pwm.Set(frequency, dutyCycle);
         }
 
         private void PwmThread(PwmOutput pwm)
         {
             do
             {
-                float dutyCycle = GetDutyCycle(Time.start, Time.photoperiod, Time.overhead, Time.transition, this.transition, this.overhead, this.night);
+                float dutyCycle = GetCurrentDutyCycle();
 
                 try
                 {
@@ -80,67 +82,80 @@ namespace plantedTankBrain
             } while (true);
         }
 
-        // figures out what the current dutycycle should be for the pwm setting based on how far between phases the time is... hurts my head... easier way to do this?
-        private float GetDutyCycle(TimeSpan start, TimeSpan totalLength, TimeSpan overheadLength, TimeSpan transitionLength, float transition, float overhead, float night)
+        // this one has transitions but the stages are constant
+        private float GetCurrentDutyCycle()
         {
-            float diff;
-            float dutyCycle;
+            TimeSpan now = DateTime.Now.TimeOfDay;
+
+            if (isCurrentTimePeriod(now, Time.sunrise, Time.morning))
+            {//sunrise
+                return fader(now, Time.sunrise, Time.morning, DutyCycle.night, DutyCycle.lowLight);
+            }
+            else if (isCurrentTimePeriod(now, Time.morning, Time.fadeToOverhead))
+            {//morning low light
+                return DutyCycle.lowLight;
+            }
+            else if (isCurrentTimePeriod(now, Time.fadeToOverhead, Time.overhead))
+            { //fading between morning and overhead
+                return fader(now, Time.fadeToOverhead, Time.overhead, DutyCycle.lowLight, DutyCycle.overhead);
+            }
+            else if (isCurrentTimePeriod(now, Time.overhead, Time.fadeToLowLight))
+            {//overhead/ max light
+                return DutyCycle.overhead;
+            }
+            else if (isCurrentTimePeriod(now, Time.fadeToLowLight, Time.evening))
+            {// fader to evening
+                return fader(now, Time.fadeToLowLight, Time.evening, DutyCycle.overhead, DutyCycle.lowLight);
+            }
+            else if (isCurrentTimePeriod(now, Time.evening, Time.sunset))
+            {// evening
+                return DutyCycle.lowLight;
+            }
+            else if (isCurrentTimePeriod(now, Time.sunset, Time.night))
+            { //sunset
+                return fader(now, Time.sunset, Time.night, DutyCycle.lowLight, DutyCycle.night);
+            }
+            else
+            {// night time
+                return DutyCycle.night;
+            }
+        }
+
+        private bool isCurrentTimePeriod(TimeSpan now, TimeSpan start, TimeSpan finish)
+        {
+            if (now > start && now < finish)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private float fader(TimeSpan now, TimeSpan start, TimeSpan end, float startDutyCycle, float finishDutyCycle)
+        {
             long duration;
             long currentTick;
+            float dutyCycleDifference;
+            float dutyCycleResult;
 
-            TimeSpan now = DateTime.Now.TimeOfDay;
-            TimeSpan sunRiseEnd = start.Add(transitionLength);
-            TimeSpan morningAfternoonLength = TimeSpan.FromTicks(((totalLength.Ticks - transitionLength.Ticks * 2) - overheadLength.Ticks) / 2);
-            TimeSpan sunSetStart = start.Add(totalLength).Subtract(transitionLength);
-            TimeSpan sunSetEnd = start.Add(totalLength);
-            TimeSpan overheadStart = TimeSpan.FromTicks(sunRiseEnd.Ticks + morningAfternoonLength.Ticks);
-            TimeSpan overheadEnd = TimeSpan.FromTicks(sunSetStart.Ticks - morningAfternoonLength.Ticks);
-            
-
-            if (now > start && now < sunRiseEnd)//sunrise  
+            if (startDutyCycle < finishDutyCycle) //math.abs does not exist in .netmf 4.3 :(
             {
-                diff = transition - night;
-                duration = transitionLength.Ticks;
+                dutyCycleDifference = startDutyCycle - finishDutyCycle;
+                duration = start.Ticks - end.Ticks;
                 currentTick = now.Ticks - start.Ticks;
-                
-                dutyCycle = night + (float)currentTick / (float)duration * diff;
-                return dutyCycle;
+                dutyCycleResult = startDutyCycle + (float)currentTick / (float)duration * dutyCycleDifference;
             }
-            else if (now > sunRiseEnd && now < overheadStart)//transition to overhead sun
-            {  
-                diff = overhead - transition;
-                duration = overheadStart.Ticks - sunRiseEnd.Ticks;
-                currentTick = now.Ticks - sunRiseEnd.Ticks;
+            else
+            {
+                dutyCycleDifference = finishDutyCycle - startDutyCycle;
+                duration = end.Ticks - start.Ticks;
+                currentTick = start.Ticks - now.Ticks;
+                dutyCycleResult = startDutyCycle - (float)currentTick / (float)duration * dutyCycleDifference;
+            }
 
-                dutyCycle = transition + (float)currentTick / (float)duration * diff;
-                return dutyCycle;
-            }
-            else if (now > overheadStart && now < overheadEnd)//overheard sun/max light .. just gonna sent the parameter back
-            {
-                return overhead; 
-            }
-            else if (now > overheadEnd && now < sunSetStart)// transition to sunset start
-            {
-                diff = overhead - transition;
-                duration = sunSetStart.Ticks - overheadEnd.Ticks;
-                currentTick = now.Ticks - overheadEnd.Ticks;
-
-                dutyCycle = overhead - (float)currentTick / (float)duration * diff;
-                return dutyCycle;
-            }
-            else if (now > sunSetStart && now < sunSetEnd)// sunset
-            {
-                diff = transition - night;
-                duration = transitionLength.Ticks;
-                currentTick = now.Ticks - sunSetStart.Ticks;
-
-                dutyCycle = transition - (float)currentTick / (float)duration * diff;
-                return dutyCycle;
-            }
-            else // night time.. just gonna sent the parameter back
-            {
-                return night;
-            }
+            return dutyCycleResult;
         }
     }
 }

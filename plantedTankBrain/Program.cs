@@ -37,7 +37,7 @@ namespace plantedTankBrain
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             //Set the time current time... this needs to be re-done whenever power is lost unless a clock module is added
-            DateTime time = new DateTime(2014, 12, 12, 13, 03, 00);
+            DateTime time = new DateTime(2014, 12, 12, 18, 43, 00);
             Utility.SetLocalTime(time);
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
@@ -48,7 +48,7 @@ namespace plantedTankBrain
             Lighting white = new Lighting(extender2, GT.Socket.Pin.Eight, 1000, .05f, 1f, .004f);
             //Lighting blue = new Lighting(extender2, GT.Socket.Pin.Seven, 1000, .1f, 1f, .004f);
 
-            TimeSpan co2Start = new TimeSpan(0, 00, 0);
+            TimeSpan co2Start = new TimeSpan(2, 00, 0);
             TimeSpan co2End = new TimeSpan(2, 00, 0);
             Co2 co2 = new Co2(relayISOx16, co2Start, co2End);
 

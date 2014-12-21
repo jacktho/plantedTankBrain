@@ -21,8 +21,8 @@ namespace plantedTankBrain
     {
         public Co2(RelayISOx16 relay, TimeSpan startOffset, TimeSpan endOffset)
         {
-            TimeSpan start = Lighting.Time.start.Subtract(startOffset);
-            TimeSpan end = Lighting.Time.start.Add(Lighting.Time.photoperiod).Subtract(endOffset);
+            TimeSpan start = Lighting.Time.fadeToOverhead.Subtract(startOffset);
+            TimeSpan end = Lighting.Time.fadeToLowLight.Add(endOffset);
 
             Thread co2Thread = new Thread(() => Co2Thread(relay, start, end));
             co2Thread.Start();
