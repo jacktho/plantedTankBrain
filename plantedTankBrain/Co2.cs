@@ -42,7 +42,7 @@ namespace plantedTankBrain
                     relay.DisableRelay(RelayISOx16.Relays.Relay7);
                 }
 
-                Thread.Sleep(10000);
+                Thread.Sleep(1000);
             } while (true);
         }
     }

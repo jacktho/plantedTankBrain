@@ -26,12 +26,12 @@ namespace plantedTankBrain
         {
             public static TimeSpan sunrise = new TimeSpan(8, 15, 0);
             public static TimeSpan morning = new TimeSpan(8, 30, 0);
-            public static TimeSpan fadeToOverhead = new TimeSpan(11, 00, 0);
-            public static TimeSpan overhead = new TimeSpan(11, 30, 0);
-            public static TimeSpan fadeToLowLight = new TimeSpan(17, 00, 00);
-            public static TimeSpan evening = new TimeSpan(17, 30, 0);
-            public static TimeSpan sunset = new TimeSpan(19, 30, 0);
-            public static TimeSpan night = new TimeSpan(19, 45, 0);
+            public static TimeSpan fadeToOverhead = new TimeSpan(8, 30, 0);
+            public static TimeSpan overhead = new TimeSpan(9, 00, 0);
+            public static TimeSpan fadeToLowLight = new TimeSpan(16, 30, 00);
+            public static TimeSpan evening = new TimeSpan(16, 30, 0);
+            public static TimeSpan sunset = new TimeSpan(17, 00, 0);
+            public static TimeSpan night = new TimeSpan(17, 15, 0);
         }
 
         //duty cycle settings for each time period... values set are just defaults
@@ -77,6 +77,7 @@ namespace plantedTankBrain
                 }
 
                 Thread.Sleep(1000);
+
                 //string thread = Thread.CurrentThread.ManagedThreadId.ToString();
                 //Debug.Print("dutyCycle of " + thread + " is " + dutyCycle + " at " + DateTime.Now.TimeOfDay.ToString());
             } while (true);

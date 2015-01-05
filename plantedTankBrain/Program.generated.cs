@@ -27,6 +27,9 @@ namespace plantedTankBrain {
         /// <summary>The Extender module using socket 4 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.Extender extender2;
         
+        /// <summary>The Extender module using socket 2 of the mainboard.</summary>
+        private Gadgeteer.Modules.GHIElectronics.Extender uart;
+        
         /// <summary>This property provides access to the Mainboard API. This is normally not necessary for an end user program.</summary>
         protected new static GHIElectronics.Gadgeteer.FEZCerberus Mainboard {
             get {
@@ -53,6 +56,7 @@ namespace plantedTankBrain {
             this.relayISOx16 = new GTM.GHIElectronics.RelayISOx16(3);
             this.extender = new GTM.GHIElectronics.Extender(5);
             this.extender2 = new GTM.GHIElectronics.Extender(4);
+            this.uart = new GTM.GHIElectronics.Extender(2);
         }
     }
 }
