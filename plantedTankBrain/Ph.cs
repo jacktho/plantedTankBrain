@@ -21,15 +21,24 @@ namespace plantedTankBrain
     class Ph
     {
         string buffer;
-
         public Ph(Extender uart)
         {
+            //create serial connection
             SerialPort serial = new SerialPort("COM2", 38400, Parity.None, 8, StopBits.One);
             serial.Open();
-            
+
+            // start listenning for rx
             serial.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
-            //Thread phThread = new Thread(() => PhThread(serial));
-            //phThread.Start();
+
+            //get status
+            genericCommand(serial, "STATUS\r");
+
+            //set temp
+            genericCommand(serial, "T,26.0\r");
+
+            //command
+            //Thread phCal = new Thread(() => genericCommand(serial, "Cal,mid,7.00\r"));
+            //phCal.Start();
         }
 
 
@@ -42,62 +51,34 @@ namespace plantedTankBrain
         {
             SerialPort serial = (SerialPort)sender;
 
-            byte[] buffer = new byte[serial.BytesToRead];
-            serial.Read(buffer, 0, buffer.Length);
+            byte[] rxBytes = new byte[serial.BytesToRead];
+            serial.Read(rxBytes, 0, rxBytes.Length);
 
-            int carriageReturnNum = 1000;
+            char[] rxChars = Encoding.UTF8.GetChars(rxBytes);
 
-            for (int i = 0; i < buffer.Length; i++)
+            for (int i = 0; i < rxChars.Length; i++)
             {
-                Debug.Print(buffer[i].ToString());
-                if (buffer[i] == 13)//13 is CR
+                if ((byte)rxChars[i] == 13) //13 is cariage return in ascii
                 {
-                    carriageReturnNum = i;
+                    Debug.Print("PH Controller: " + this.buffer);
+                    this.buffer = "";//clear the "buffer"
+                    
                 }
-            }
-
-            if (carriageReturnNum == 1000)
-            {
-                char[] rxChar = Encoding.UTF8.GetChars(buffer);
-
-                for (int i = 0; i < rxChar.Length; i++)
+                else
                 {
-                    this.buffer += rxChar[i].ToString();
+                    this.buffer += rxChars[i].ToString();
                 }
             }
-            else
-            {
-                if(carriageReturnNum != 0){
-                    byte[] prefix = new byte[carriageReturnNum + 1];
-                    Array.Copy(buffer, prefix, carriageReturnNum + 1);
-                    char[] prefixChar = Encoding.UTF8.GetChars(prefix);
+        }
 
-                    string prefixBuffer = "";
-                    for (int i = 0; i < prefixChar.Length; i++)
-                    {
-                        prefixBuffer += prefixChar[i].ToString();
-                    }
-                    Debug.Print(this.buffer + prefixBuffer);
-                    this.buffer = "";
-                }
-
-                if(carriageReturnNum != buffer.Length - 1) {
-                    int suffixSize = buffer.Length - (carriageReturnNum + 1);
-                    byte[] suffix = new byte[suffixSize];
-                    buffer.CopyTo(suffix, carriageReturnNum + 1);
-                    char[] suffixChar = Encoding.UTF8.GetChars(suffix);
-
-                    string suffixBuffer = "";
-                    for (int i = 0; i < suffix.Length; i++)
-                    {
-                        suffixBuffer += suffixChar[i].ToString();
-                    }
-                    this.buffer += suffixBuffer;
-                }
-            }
-
-            carriageReturnNum = 1000;
-            Array.Clear(buffer, 0, buffer.Length);
+        //example string: RESPONSE,1<CR>
+        public void genericCommand(SerialPort serial, string command)
+        {
+            Thread.Sleep(4000);
+            serial.Flush();
+            byte[] buffer = Encoding.UTF8.GetBytes(command);
+            serial.Write(buffer, 0, buffer.Length);
+            Debug.Print("Generic Command Sent");
         }
     }
 }
