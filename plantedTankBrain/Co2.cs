@@ -22,7 +22,7 @@ namespace plantedTankBrain
         public Co2(RelayISOx16 relay, TimeSpan startOffset, TimeSpan endOffset)
         {
             TimeSpan start = Lighting.Time.fadeToOverhead.Subtract(startOffset);
-            TimeSpan end = Lighting.Time.fadeToLowLight.Add(endOffset);
+            TimeSpan end = Lighting.Time.fadeToLowLight.Subtract(endOffset);
 
             Thread co2Thread = new Thread(() => Co2Thread(relay, start, end));
             co2Thread.Start();
@@ -35,11 +35,11 @@ namespace plantedTankBrain
                 TimeSpan now = DateTime.Now.TimeOfDay;
                 if (now > start && now < end)
                 {
-                    relay.EnableRelay(RelayISOx16.Relays.Relay7);
+                    relay.EnableRelay(RelayISOx16.Relays.Relay13);
                 }
                 else
                 {
-                    relay.DisableRelay(RelayISOx16.Relays.Relay7);
+                    relay.DisableRelay(RelayISOx16.Relays.Relay13);
                 }
 
                 Thread.Sleep(1000);

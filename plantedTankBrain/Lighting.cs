@@ -25,22 +25,19 @@ namespace plantedTankBrain
         public struct Time
         {
             public static TimeSpan sunrise = new TimeSpan(8, 15, 0);
-            public static TimeSpan morning = new TimeSpan(8, 30, 0);
+            public static TimeSpan morning = new TimeSpan(8, 20, 0);
             public static TimeSpan fadeToOverhead = new TimeSpan(8, 30, 0);
             public static TimeSpan overhead = new TimeSpan(9, 00, 0);
             public static TimeSpan fadeToLowLight = new TimeSpan(16, 30, 00);
-            public static TimeSpan evening = new TimeSpan(16, 30, 0);
+            public static TimeSpan evening = new TimeSpan(16, 45, 0);
             public static TimeSpan sunset = new TimeSpan(17, 00, 0);
-            public static TimeSpan night = new TimeSpan(17, 15, 0);
+            public static TimeSpan night = new TimeSpan(17, 05, 0);
         }
 
         //duty cycle settings for each time period... values set are just defaults
-        public struct DutyCycle
-        {
-            public static float overhead = 1f;
-            public static float lowLight = .05f;
-            public static float night = .02f;
-        }
+        public float overhead = .1f;
+        public float lowLight = .05f;
+        public float night = .02f;
 
         public int frequency;
         Extender extender;
@@ -49,9 +46,9 @@ namespace plantedTankBrain
         {
             this.extender = extender;
             this.frequency = frequency;
-            DutyCycle.lowLight = lowLightDutyCycle;
-            DutyCycle.overhead = overheadDutyCycle;
-            DutyCycle.night = nightDutyCycle;
+            this.lowLight = lowLightDutyCycle;
+            this.overhead = overheadDutyCycle;
+            this.night = nightDutyCycle;
 
             //asign the pin for pwm
             PwmOutput pwm = extender.CreatePwmOutput(pin);
@@ -90,35 +87,35 @@ namespace plantedTankBrain
 
             if (isCurrentTimePeriod(now, Time.sunrise, Time.morning))
             {//sunrise
-                return fader(now, Time.sunrise, Time.morning, DutyCycle.night, DutyCycle.lowLight);
+                return fader(now, Time.sunrise, Time.morning, this.night, this.lowLight);
             }
             else if (isCurrentTimePeriod(now, Time.morning, Time.fadeToOverhead))
             {//morning low light
-                return DutyCycle.lowLight;
+                return this.lowLight;
             }
             else if (isCurrentTimePeriod(now, Time.fadeToOverhead, Time.overhead))
             { //fading between morning and overhead
-                return fader(now, Time.fadeToOverhead, Time.overhead, DutyCycle.lowLight, DutyCycle.overhead);
+                return fader(now, Time.fadeToOverhead, Time.overhead, this.lowLight, this.overhead);
             }
             else if (isCurrentTimePeriod(now, Time.overhead, Time.fadeToLowLight))
             {//overhead/ max light
-                return DutyCycle.overhead;
+                return this.overhead;
             }
             else if (isCurrentTimePeriod(now, Time.fadeToLowLight, Time.evening))
             {// fader to evening
-                return fader(now, Time.fadeToLowLight, Time.evening, DutyCycle.overhead, DutyCycle.lowLight);
+                return fader(now, Time.fadeToLowLight, Time.evening, this.overhead, this.lowLight);
             }
             else if (isCurrentTimePeriod(now, Time.evening, Time.sunset))
             {// evening
-                return DutyCycle.lowLight;
+                return this.lowLight;
             }
             else if (isCurrentTimePeriod(now, Time.sunset, Time.night))
             { //sunset
-                return fader(now, Time.sunset, Time.night, DutyCycle.lowLight, DutyCycle.night);
+                return fader(now, Time.sunset, Time.night, this.lowLight, this.night);
             }
             else
             {// night time
-                return DutyCycle.night;
+                return this.night;
             }
         }
 
@@ -155,6 +152,8 @@ namespace plantedTankBrain
                 currentTick = start.Ticks - now.Ticks;
                 dutyCycleResult = startDutyCycle - (float)currentTick / (float)duration * dutyCycleDifference;
             }
+
+            Debug.Print("dutyCycle is " + dutyCycleResult);
 
             return dutyCycleResult;
         }

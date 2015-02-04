@@ -39,22 +39,26 @@ namespace plantedTankBrain
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             //Set the time current time... this needs to be re-done whenever power is lost unless a clock module is added
-            DateTime time = new DateTime(2014, 12, 12, 7, 15, 00);
+            DateTime time = new DateTime(2014, 12, 12, 12, 54, 00);
             Utility.SetLocalTime(time);
            
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
 
-            Lighting royalblue = new Lighting(extender, GT.Socket.Pin.Seven, 1000, .02f, 1f, .0002f);
+            Lighting royalblue = new Lighting(extender, GT.Socket.Pin.Seven, 1000, .005f, .15f, .00005f);
             Lighting red = new Lighting(extender, GT.Socket.Pin.Eight, 1000, .1f, 1f, .0005f);
             Lighting white = new Lighting(extender2, GT.Socket.Pin.Eight, 1000, .05f, 1f, .0005f);
             //Lighting blue = new Lighting(extender2, GT.Socket.Pin.Seven, 1000, .1f, 1f, .004f);
 
+            //Lighting white = new Lighting(extender2, GT.Socket.Pin.Eight, 1000, 1f, 1f, 1f);
+
+
             TimeSpan co2Start = new TimeSpan(1, 00, 0);
-            TimeSpan co2End = new TimeSpan(0, 0, 0);
+            TimeSpan co2End = new TimeSpan(0, 30, 0);
             Co2 co2 = new Co2(relayISOx16, co2Start, co2End);
 
-
+            //relayISOx16.EnableRelay(RelayISOx16.Relays.Relay1);
+            //relayISOx16.EnableRelay(RelayISOx16.Relays.Relay12);
 
             Ph ph = new Ph(uart);
 

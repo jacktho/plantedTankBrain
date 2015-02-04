@@ -60,7 +60,7 @@ namespace plantedTankBrain
             {
                 if ((byte)rxChars[i] == 13) //13 is cariage return in ascii
                 {
-                    Debug.Print("PH Controller: " + this.buffer);
+                    Debug.Print("PH at " + DateTime.Now + ": " + this.buffer);
                     this.buffer = "";//clear the "buffer"
                     
                 }
