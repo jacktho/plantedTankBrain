@@ -18,10 +18,10 @@ namespace plantedTankBrain {
         /// <summary>The USB Client SP module using socket 8 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.USBClientSP usbClientSP;
         
-        /// <summary>The Relay ISOx16 module using socket 3 of the mainboard.</summary>
+        /// <summary>The Relay ISOx16 module using socket 7 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.RelayISOx16 relayISOx16;
         
-        /// <summary>The Extender module using socket 5 of the mainboard.</summary>
+        /// <summary>The Extender module using socket 3 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.Extender extender;
         
         /// <summary>The Extender module using socket 4 of the mainboard.</summary>
@@ -29,6 +29,12 @@ namespace plantedTankBrain {
         
         /// <summary>The Extender module using socket 2 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.Extender uart;
+        
+        /// <summary>The Tunes module using socket E1 of extender2.</summary>
+        private Gadgeteer.Modules.GHIElectronics.Tunes tunes;
+        
+        /// <summary>The Ethernet ENC28 module using socket 5 of the mainboard.</summary>
+        private Gadgeteer.Modules.GHIElectronics.EthernetENC28 ethernetENC28;
         
         /// <summary>This property provides access to the Mainboard API. This is normally not necessary for an end user program.</summary>
         protected new static GHIElectronics.Gadgeteer.FEZCerberus Mainboard {
@@ -53,10 +59,12 @@ namespace plantedTankBrain {
         
         private void InitializeModules() {
             this.usbClientSP = new GTM.GHIElectronics.USBClientSP(8);
-            this.relayISOx16 = new GTM.GHIElectronics.RelayISOx16(3);
-            this.extender = new GTM.GHIElectronics.Extender(5);
+            this.relayISOx16 = new GTM.GHIElectronics.RelayISOx16(7);
+            this.extender = new GTM.GHIElectronics.Extender(3);
             this.extender2 = new GTM.GHIElectronics.Extender(4);
             this.uart = new GTM.GHIElectronics.Extender(2);
+            this.tunes = new GTM.GHIElectronics.Tunes(this.extender2.ExtenderSocketB);
+            this.ethernetENC28 = new GTM.GHIElectronics.EthernetENC28(5);
         }
     }
 }

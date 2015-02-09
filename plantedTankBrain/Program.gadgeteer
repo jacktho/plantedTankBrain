@@ -52,8 +52,8 @@
           <moduleHasSocketUses Id="d216f4ab-d367-4033-bf4e-7e0e72b2075e">
             <socketUse Id="8ebdc97a-02cf-4e48-9370-917787bbd54d" label="Y">
               <socket>
-                <socketUseReferencesSocket Id="ca1e3050-5a99-4d7b-9cad-c227f832c414">
-                  <socketMoniker Id="cbda01ef-a3d8-4160-b623-31996c5af8a2" />
+                <socketUseReferencesSocket Id="975ccbf9-f12a-4096-9275-f0db1b42887c">
+                  <socketMoniker Id="7a45cb40-6c62-4e59-98c2-a28a84cd4b31" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>
@@ -72,8 +72,8 @@
           <moduleHasSocketUses Id="842bc8e0-bc0e-478e-b4de-62bc0e8f5779">
             <socketUse Id="7012a999-2410-4c95-8393-8f2e756270e2">
               <socket>
-                <socketUseReferencesSocket Id="d2b53d41-ed27-497b-bbf2-d1097f2e4651">
-                  <socketMoniker Id="563688dd-047c-4743-92ad-8fc5e1eb6904" />
+                <socketUseReferencesSocket Id="60e3a4e1-96fc-475e-ac9a-5ea0a24e09c7">
+                  <socketMoniker Id="cbda01ef-a3d8-4160-b623-31996c5af8a2" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>
@@ -92,7 +92,7 @@
           <moduleHasSocketUses Id="57f9acd3-3953-4d6a-81a4-3cfbb8223968">
             <socketUse Id="fe067715-9065-4038-9dc1-cc09b72b8a36">
               <socket>
-                <socketUseReferencesSocket Id="a02f6835-a8e5-4574-a13c-9006b2c6a6a7">
+                <socketUseReferencesSocket Id="8b99473a-c3ec-477a-9f3b-005167e0ccbd">
                   <socketMoniker Id="edd56767-4846-429a-988f-272f357df306" />
                 </socketUseReferencesSocket>
               </socket>
@@ -114,6 +114,36 @@
               <socket>
                 <socketUseReferencesSocket Id="8f67d4e4-d29d-4835-9c23-b0e0762d1e3c">
                   <socketMoniker Id="6b418c4f-5c1c-4158-9ab9-64c9e9cff0c6" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="a294147f-e912-4a39-b330-19b7b9abf679">
+      <module Id="8a5c2e01-695c-4cdc-a28a-9ec03eb07bff" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;Tunes&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A Tunes module&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.Tunes&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\Tunes\Image.jpg&quot; BoardWidth=&quot;32&quot; BoardHeight=&quot;22&quot; MinimumGadgeteerCoreVersion=&quot;2.43.800&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/283&quot; UniqueId=&quot;eb388a33-bde1-47c2-b0a4-2ad7b22faab7&quot; InstanceName=&quot;tunes&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;Power&gt;&#xD;&#xA;    &lt;PowerRequirements Voltage=&quot;3.3&quot;&gt;&#xD;&#xA;      &lt;TypicalCurrent&gt;0.015&lt;/TypicalCurrent&gt;&#xD;&#xA;      &lt;MaximumCurrent&gt;0.03&lt;/MaximumCurrent&gt;&#xD;&#xA;    &lt;/PowerRequirements&gt;&#xD;&#xA;    &lt;PowerRequirements Voltage=&quot;5&quot;&gt;&#xD;&#xA;      &lt;TypicalCurrent&gt;0&lt;/TypicalCurrent&gt;&#xD;&#xA;      &lt;MaximumCurrent&gt;0&lt;/MaximumCurrent&gt;&#xD;&#xA;    &lt;/PowerRequirements&gt;&#xD;&#xA;  &lt;/Power&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.Tunes&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;GTM.GHIElectronics.Tunes&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;14.5&quot; Top=&quot;18&quot; TypesLabel=&quot;P&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;P&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;9&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="tunes" moduleType="Gadgeteer.Modules.GHIElectronics.Tunes" moduleDefinitionId="eb388a33-bde1-47c2-b0a4-2ad7b22faab7">
+        <socketUses>
+          <moduleHasSocketUses Id="e60e27d7-3164-452d-b1d1-776563d4eb49">
+            <socketUse Id="a994882c-d740-45b4-8c24-1345428b1847" label="P">
+              <socket>
+                <socketUseReferencesSocket Id="1832eef1-c068-4dec-9390-52a30c245d0f">
+                  <socketMoniker Id="c23e724a-dfb5-430d-8d94-1bdadf6cd9d2" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="b09edb29-c913-4b7e-b7fa-cb8aeda9685f">
+      <module Id="2b41304d-dfec-4e26-b26f-de0150c5c8ed" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;Ethernet ENC28&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;An EthernetENC28 module&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.EthernetENC28&quot; HardwareVersion=&quot;1.2&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\EthernetENC28\Image.jpg&quot; BoardWidth=&quot;45.5&quot; BoardHeight=&quot;37&quot; MinimumGadgeteerCoreVersion=&quot;2.43.800&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/270&quot; UniqueId=&quot;cab62291-8a54-4a55-935a-a62bc7cc2a20&quot; InstanceName=&quot;ethernetENC28&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;Power&gt;&#xD;&#xA;    &lt;PowerRequirements Voltage=&quot;3.3&quot;&gt;&#xD;&#xA;      &lt;TypicalCurrent&gt;0.05&lt;/TypicalCurrent&gt;&#xD;&#xA;      &lt;MaximumCurrent&gt;0.05&lt;/MaximumCurrent&gt;&#xD;&#xA;    &lt;/PowerRequirements&gt;&#xD;&#xA;    &lt;PowerRequirements Voltage=&quot;5&quot;&gt;&#xD;&#xA;      &lt;TypicalCurrent&gt;0&lt;/TypicalCurrent&gt;&#xD;&#xA;      &lt;MaximumCurrent&gt;0&lt;/MaximumCurrent&gt;&#xD;&#xA;    &lt;/PowerRequirements&gt;&#xD;&#xA;  &lt;/Power&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.EthernetENC28&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;GTM.GHIElectronics.EthernetENC28&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.SPI&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.WebClient&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.WebServer&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;Gadgeteer.SPI&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;Gadgeteer.WebClient&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;Gadgeteer.WebServer&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GHI.Premium.Net&quot; ErrorMessage=&quot;GHI.Premium.Net could not be found.&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;GHI.Networking&quot; ErrorMessage=&quot;GHI.Networking could not be found.&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;0&quot; Left=&quot;3&quot; Top=&quot;18&quot; TypesLabel=&quot;S&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;S&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;5&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;6&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;7&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;8&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;9&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GHI.Premium.Net&quot; ErrorMessage=&quot;GHI.Premium.Net could not be found.&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;GHI.Networking&quot; ErrorMessage=&quot;GHI.Networking could not be found.&quot; /&gt;&#xD;&#xA;  &lt;/ExtraLibrariesRequired&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="ethernetENC28" moduleType="Gadgeteer.Modules.GHIElectronics.EthernetENC28" moduleDefinitionId="cab62291-8a54-4a55-935a-a62bc7cc2a20">
+        <socketUses>
+          <moduleHasSocketUses Id="a62a5e93-df62-4c68-a462-694345201539">
+            <socketUse Id="9927620f-98fd-48d4-831c-ade7252ef38c" label="S">
+              <socket>
+                <socketUseReferencesSocket Id="01403b8a-8656-4ec3-92cd-35bb08821c57">
+                  <socketMoniker Id="563688dd-047c-4743-92ad-8fc5e1eb6904" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>

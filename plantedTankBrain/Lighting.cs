@@ -1,19 +1,9 @@
 using System;
-using System.Collections;
 using System.Threading;
-using System.Reflection;
 using Microsoft.SPOT;
-using Microsoft.SPOT.Hardware;
-using Microsoft.SPOT.Presentation;
-using Microsoft.SPOT.Presentation.Controls;
-using Microsoft.SPOT.Presentation.Media;
-using Microsoft.SPOT.Presentation.Shapes;
-using Microsoft.SPOT.Touch;
 
 using Gadgeteer.SocketInterfaces;
-using Gadgeteer.Networking;
 using GT = Gadgeteer;
-using GTM = Gadgeteer.Modules;
 using Gadgeteer.Modules.GHIElectronics;
 
 namespace plantedTankBrain
@@ -153,7 +143,6 @@ namespace plantedTankBrain
                 dutyCycleResult = startDutyCycle - (float)currentTick / (float)duration * dutyCycleDifference;
             }
 
-            Debug.Print("dutyCycle is " + dutyCycleResult);
 
             return dutyCycleResult;
         }

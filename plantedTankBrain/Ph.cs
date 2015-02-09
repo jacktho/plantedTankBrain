@@ -1,27 +1,27 @@
 using System;
-using System.Collections;
+using System.Net;
 using System.Threading;
+using System.IO;
 using System.IO.Ports;
 using System.Text;
 using Microsoft.SPOT;
-using Microsoft.SPOT.Hardware;
-using Microsoft.SPOT.Presentation;
-using Microsoft.SPOT.Presentation.Controls;
-using Microsoft.SPOT.Presentation.Media;
-using Microsoft.SPOT.Presentation.Shapes;
-using Microsoft.SPOT.Touch;
 
-using Gadgeteer.Networking;
-using GT = Gadgeteer;
-using GTM = Gadgeteer.Modules;
 using Gadgeteer.Modules.GHIElectronics;
 
 namespace plantedTankBrain
 {
     class Ph
     {
-        string buffer;
+
         public Ph(Extender uart)
+        {
+            //start thread
+            Thread Ph = new Thread(new ThreadStart(PhThread));
+            Ph.Start();
+        }
+
+
+        private void PhThread()
         {
             //create serial connection
             SerialPort serial = new SerialPort("COM2", 38400, Parity.None, 8, StopBits.One);
@@ -35,18 +35,11 @@ namespace plantedTankBrain
 
             //set temp
             genericCommand(serial, "T,26.0\r");
-
-            //command
-            //Thread phCal = new Thread(() => genericCommand(serial, "Cal,mid,7.00\r"));
-            //phCal.Start();
         }
 
-
-        //private void PhThread(SerialPort serial)
-        //{
-
-        //}
-
+        string buffer;
+        double[] previousReadings = new double[60];
+        int dataCount = 0;
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort serial = (SerialPort)sender;
@@ -61,12 +54,36 @@ namespace plantedTankBrain
                 if ((byte)rxChars[i] == 13) //13 is cariage return in ascii
                 {
                     Debug.Print("PH at " + DateTime.Now + ": " + this.buffer);
+                    if (dataCount > 59)
+                    {
+                        dataCount = 0;
+                    }
+
+                    double bufferAsNumber;
+                    if (double.TryParse(this.buffer, out bufferAsNumber))
+                    {
+                        if (bufferAsNumber > 2 && bufferAsNumber < 15)
+                        {
+                            previousReadings[dataCount] = bufferAsNumber;
+                            dataCount++;
+                        }
+                        
+                    }
+
+                    if (dataCount == 59)
+                    {
+                        double average = findAverage(previousReadings);
+                        saveToDatabase(average);
+                    }
+
+
                     this.buffer = "";//clear the "buffer"
-                    
+
                 }
                 else
                 {
-                    this.buffer += rxChars[i].ToString();
+                    string character = rxChars[i].ToString();
+                    this.buffer += character;
                 }
             }
         }
@@ -79,6 +96,48 @@ namespace plantedTankBrain
             byte[] buffer = Encoding.UTF8.GetBytes(command);
             serial.Write(buffer, 0, buffer.Length);
             Debug.Print("Generic Command Sent");
+        }
+
+        private double findAverage(double[] numbers)
+        {
+            //add them all up
+            double total = 0;
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                total += numbers[i];
+            }
+            //divide to find the average
+            return total / numbers.Length;
+        }
+
+        private void saveToDatabase(double ph)
+        {
+            string json = "{\"statements\": [{\"statement\": \"CREATE(n:PH {props})\", \"parameters\" : { \"props\" : { \"date:\" \"" + DateTime.Today + "\", \"time:\" \"" + DateTime.Now.TimeOfDay + "\", \"PH\": \"" + ph.ToString() + "\"}}}]}";
+            Debug.Print(json);
+            byte[] data = Encoding.UTF8.GetBytes(json);
+
+            var request = (HttpWebRequest)WebRequest.Create("http://s3.jpt.pvt:7474/db/data/transaction/commit");
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.ContentLength = data.Length;
+            request.KeepAlive = false;
+
+            using (var stream = request.GetRequestStream())
+            {
+                try
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+                catch
+                {
+                    Debug.Print("Error writing to database");
+                }
+            }
+
+            var response = (HttpWebResponse)request.GetResponse();
+            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            Debug.Print(responseString);
+            request.Dispose();
         }
     }
 }
