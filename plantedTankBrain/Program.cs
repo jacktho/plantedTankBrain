@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Microsoft.SPOT;
-
+using Microsoft.SPOT.Hardware;
 using GT = Gadgeteer;
 using Gadgeteer.Modules.GHIElectronics;
 
@@ -31,17 +31,17 @@ namespace plantedTankBrain
             
             
             
-            //DateTime time = new DateTime(2014, 12, 12, 12, 19, 22);
-            //Utility.SetLocalTime(time);
+            DateTime time = new DateTime(2014, 12, 12, 7, 45, 22);
+            Utility.SetLocalTime(time);
 
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
             
-            Lighting royalblue = new Lighting(extender, GT.Socket.Pin.Seven, 1000, .005f, .25f, .00005f);
-            Lighting red = new Lighting(extender, GT.Socket.Pin.Eight, 1000, .1f, 1f, .0005f);
-            Lighting white = new Lighting(extender2, GT.Socket.Pin.Eight, 1000, .05f, 1f, .0005f);
-            //Lighting blue = new Lighting(extender2, GT.Socket.Pin.Seven, 1000, .1f, 1f, .004f);
+            Lighting royalblue = new Lighting(extender, GT.Socket.Pin.Seven, 1000, .005f, .1f, .00005f);
+            Lighting red = new Lighting(extender, GT.Socket.Pin.Eight, 1000, .1f, .50f, .0005f);
+            Lighting white = new Lighting(extender2, GT.Socket.Pin.Eight, 1000, .05f, .30f, .0005f);
+            Lighting blue = new Lighting(extender2, GT.Socket.Pin.Seven, 1000, .1f, 1f, .004f);
 
             //Lighting white = new Lighting(extender2, GT.Socket.Pin.Eight, 1000, 1f, 1f, 1f);
 
@@ -53,29 +53,29 @@ namespace plantedTankBrain
             relayISOx16.EnableRelay(RelayISOx16.Relays.Relay1);
             relayISOx16.EnableRelay(RelayISOx16.Relays.Relay12);
 
-            string[] dns = {"192.168.0.4"};
+            //string[] dns = {"192.168.0.4"};
 
-            ethernetENC28.UseThisNetworkInterface();
-            ethernetENC28.UseStaticIP("192.168.0.109","255.255.255.0","192.168.0.1",dns);
-            ////ethernetENC28.UseDHCP();
+            //ethernetENC28.UseThisNetworkInterface();
+            //ethernetENC28.UseStaticIP("192.168.0.109","255.255.255.0","192.168.0.1",dns);
+            //////ethernetENC28.UseDHCP();
             
 
-            while (ethernetENC28.NetworkInterface.IPAddress == "0.0.0.0")
-            {
-                Debug.Print("Waiting for DHCP");
-                Thread.Sleep(250);
-            }
-            Debug.Print("IP is: " + ethernetENC28.NetworkInterface.IPAddress);
+            //while (ethernetENC28.NetworkInterface.IPAddress == "0.0.0.0")
+            //{
+            //    Debug.Print("Waiting for DHCP");
+            //    Thread.Sleep(250);
+            //}
+            //Debug.Print("IP is: " + ethernetENC28.NetworkInterface.IPAddress);
 
-            //check time
-            Time time = new Time();
-            time.SetTime();
+            ////check time
+            //Time time = new Time();
+            //time.SetTime();
 
-            Ph ph = new Ph(uart);
+            //Ph ph = new Ph(uart);
 
 
-            Debug.Print("Program Started");
-            //tunes.Play(800, 1000);
+            //Debug.Print("Program Started");
+            // tunes.Play(800, 1000);
             
 
         }

@@ -14,11 +14,11 @@ namespace plantedTankBrain
         //photoperiod times
         public struct Time
         {
-            public static TimeSpan sunrise = new TimeSpan(8, 15, 0);
-            public static TimeSpan morning = new TimeSpan(8, 20, 0);
+            public static TimeSpan sunrise = new TimeSpan(7, 15, 0);
+            public static TimeSpan morning = new TimeSpan(7, 30, 0);
             public static TimeSpan fadeToOverhead = new TimeSpan(8, 30, 0);
             public static TimeSpan overhead = new TimeSpan(9, 00, 0);
-            public static TimeSpan fadeToLowLight = new TimeSpan(16, 30, 00);
+            public static TimeSpan fadeToLowLight = new TimeSpan(15, 00, 00);
             public static TimeSpan evening = new TimeSpan(16, 45, 0);
             public static TimeSpan sunset = new TimeSpan(17, 00, 0);
             public static TimeSpan night = new TimeSpan(17, 05, 0);
